@@ -14,23 +14,14 @@ services:
     envVars:
       - key: WEB_CONCURRENCY
         value: 2
-      - key: SECRET_TOKEN
-        generateToken: true
+      - key: SECRET_KEY_BASE
+        generateValue: true
       - key: DATABASE_URL
         fromDatabase: 
           name: chatwoot
           property: connectionString
-      - key: REDIS_HOST
-        fromService: # Reference a property from another service (see available properties below)
-          type: redis
-          name: chatwoot
-          property: host
-      - key: REDIS_PORT
-        fromService:
-          type: redis
-          name: chatwoot
-          property: port
-
+      - key: REDIS_URL
+        value: redis://red-cqcibe08fa8c73cqt3i0:6379
   - type: worker
     name: chatwoot_sidekiq
     region: frankfurt
@@ -38,24 +29,17 @@ services:
     buildCommand: "bundle install"
     startCommand: "bundle exec sidekiq -C config/sidekiq.yml"
     envVars:
-      - key: SECRET_TOKEN
-        generateToken: true
+      - key: SECRET_KEY_BASE
+        generateValue: true
       - key: DATABASE_URL
         fromDatabase: 
           name: chatwoot
           property: connectionString
-      - key: REDIS_HOST
-        fromService: # Reference a property from another service (see available properties below)
-          type: redis
-          name: chatwoot
-          property: host
-      - key: REDIS_PORT
-        fromService:
-          type: redis
-          name: chatwoot
-          property: port
+      - key: REDIS_URL
+        value: redis://red-cqcibe08fa8c73cqt3i0:6379
 
 
   - type: redis
     name: chatwoot
+    region: frankfurt
     ipAllowList: []
